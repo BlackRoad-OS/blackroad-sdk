@@ -1,173 +1,48 @@
-# @blackroad/sdk
+<!-- BlackRoad SEO Enhanced -->
 
-Official TypeScript/JavaScript SDK for BlackRoad APIs.
+# ulackroad sdk
 
-## Installation
+> Part of **[BlackRoad OS](https://blackroad.io)** — Sovereign Computing for Everyone
 
-```bash
-npm install @blackroad/sdk
-# or
-yarn add @blackroad/sdk
-# or
-pnpm add @blackroad/sdk
-```
+[![BlackRoad OS](https://img.shields.io/badge/BlackRoad-OS-ff1d6c?style=for-the-badge)](https://blackroad.io)
+[![BlackRoad OS](https://img.shields.io/badge/Org-BlackRoad-OS-2979ff?style=for-the-badge)](https://github.com/BlackRoad-OS)
+[![License](https://img.shields.io/badge/License-Proprietary-f5a623?style=for-the-badge)](LICENSE)
 
-## Quick Start
+**ulackroad sdk** is part of the **BlackRoad OS** ecosystem — a sovereign, distributed operating system built on edge computing, local AI, and mesh networking by **BlackRoad OS, Inc.**
 
-```typescript
-import { BlackRoad } from '@blackroad/sdk';
+## About BlackRoad OS
 
-const client = new BlackRoad({ apiKey: 'your-api-key' });
+BlackRoad OS is a sovereign computing platform that runs AI locally on your own hardware. No cloud dependencies. No API keys. No surveillance. Built by [BlackRoad OS, Inc.](https://github.com/BlackRoad-OS-Inc), a Delaware C-Corp founded in 2025.
 
-// Get infrastructure stats
-const stats = await client.getStats();
-console.log(`${stats.repositories} repositories across ${stats.githubOrgs} orgs`);
+### Key Features
+- **Local AI** — Run LLMs on Raspberry Pi, Hailo-8, and commodity hardware
+- **Mesh Networking** — WireGuard VPN, NATS pub/sub, peer-to-peer communication
+- **Edge Computing** — 52 TOPS of AI acceleration across a Pi fleet
+- **Self-Hosted Everything** — Git, DNS, storage, CI/CD, chat — all sovereign
+- **Zero Cloud Dependencies** — Your data stays on your hardware
 
-// List agents
-const agents = await client.getAgents();
-console.log(`${agents.length} active agents`);
+### The BlackRoad Ecosystem
+| Organization | Focus |
+|---|---|
+| [BlackRoad OS](https://github.com/BlackRoad-OS) | Core platform and applications |
+| [BlackRoad OS, Inc.](https://github.com/BlackRoad-OS-Inc) | Corporate and enterprise |
+| [BlackRoad AI](https://github.com/BlackRoad-AI) | Artificial intelligence and ML |
+| [BlackRoad Hardware](https://github.com/BlackRoad-Hardware) | Edge hardware and IoT |
+| [BlackRoad Security](https://github.com/BlackRoad-Security) | Cybersecurity and auditing |
+| [BlackRoad Quantum](https://github.com/BlackRoad-Quantum) | Quantum computing research |
+| [BlackRoad Agents](https://github.com/BlackRoad-Agents) | Autonomous AI agents |
+| [BlackRoad Network](https://github.com/BlackRoad-Network) | Mesh and distributed networking |
+| [BlackRoad Education](https://github.com/BlackRoad-Education) | Learning and tutoring platforms |
+| [BlackRoad Labs](https://github.com/BlackRoad-Labs) | Research and experiments |
+| [BlackRoad Cloud](https://github.com/BlackRoad-Cloud) | Self-hosted cloud infrastructure |
+| [BlackRoad Forge](https://github.com/BlackRoad-Forge) | Developer tools and utilities |
 
-// Deploy a service
-const deployment = await client.deploy('my-service', 'PRODUCTION');
-console.log(`Deployment ${deployment.id} started`);
-```
+### Links
+- **Website**: [blackroad.io](https://blackroad.io)
+- **Documentation**: [docs.blackroad.io](https://docs.blackroad.io)
+- **Chat**: [chat.blackroad.io](https://chat.blackroad.io)
+- **Search**: [search.blackroad.io](https://search.blackroad.io)
 
-## Features
+---
 
-- **GraphQL Client** - Full access to BlackRoad GraphQL API
-- **Webhooks Client** - Create and manage webhook subscriptions
-- **Email Client** - Send transactional and marketing emails
-- **TypeScript** - Full type definitions included
-- **Zero Dependencies** - Uses native fetch
 
-## API Reference
-
-### BlackRoad Client
-
-```typescript
-const client = new BlackRoad({
-  apiKey: 'your-api-key',           // Optional API key
-  graphqlUrl: 'https://...',        // Custom GraphQL endpoint
-  webhooksUrl: 'https://...',       // Custom webhooks endpoint
-  emailUrl: 'https://...',          // Custom email endpoint
-});
-```
-
-### GraphQL Client
-
-```typescript
-// Raw queries
-const result = await client.graphql.query(`
-  query { infrastructureStats { repositories activeAgents } }
-`);
-
-// With variables
-const agents = await client.graphql.query(`
-  query($status: AgentStatus) { agents(status: $status) { id name } }
-`, { status: 'ONLINE' });
-
-// Convenience methods
-const stats = await client.graphql.getInfrastructureStats();
-const agents = await client.graphql.getAgents({ status: 'ONLINE', limit: 10 });
-const deployments = await client.graphql.getDeployments({ service: 'my-app' });
-const deployment = await client.graphql.deploy({ service: 'my-app', environment: 'PRODUCTION' });
-```
-
-### Webhooks Client
-
-```typescript
-// List webhooks
-const webhooks = await client.webhooks.list();
-
-// Create webhook
-const webhook = await client.webhooks.create({
-  url: 'https://example.com/webhook',
-  events: ['deployment.succeeded', 'agent.error'],
-  description: 'My webhook',
-});
-console.log('Secret:', webhook.secret); // Save this!
-
-// Test webhook
-await client.webhooks.test(webhook.id);
-
-// Trigger event
-await client.webhooks.trigger({
-  type: 'user.created',
-  data: { id: 'usr_123', email: 'user@example.com' },
-});
-
-// Get event types (106 available)
-const types = await client.webhooks.getEventTypes();
-```
-
-### Email Client
-
-```typescript
-// Send email using template
-await client.email.send({
-  to: 'user@example.com',
-  template: 'welcome',
-  data: { name: 'John Doe' },
-});
-
-// Convenience methods
-await client.email.sendWelcome('user@example.com', { name: 'John' });
-await client.email.sendDeploymentSuccess('user@example.com', {
-  name: 'John',
-  service: 'my-app',
-  version: 'v1.0.0',
-});
-
-// List templates
-const templates = await client.email.getTemplates();
-
-// Preview template HTML
-const html = await client.email.previewTemplate('welcome');
-```
-
-## Types
-
-```typescript
-import {
-  BlackRoad,
-  BlackRoadConfig,
-  BlackRoadError,
-  GraphQLClient,
-  WebhooksClient,
-  EmailClient,
-  Agent,
-  AgentStatus,
-  AgentType,
-  Deployment,
-  DeploymentStatus,
-  Environment,
-  InfrastructureStats,
-  Webhook,
-  WebhookEventType,
-  EmailTemplate,
-} from '@blackroad/sdk';
-```
-
-## Error Handling
-
-```typescript
-import { BlackRoadError } from '@blackroad/sdk';
-
-try {
-  await client.deploy('my-service');
-} catch (error) {
-  if (error instanceof BlackRoadError) {
-    console.error(`API Error: ${error.message} (${error.statusCode})`);
-  }
-}
-```
-
-## Live API Endpoints
-
-- **GraphQL**: https://blackroad-graphql-gateway.amundsonalexa.workers.dev/graphql
-- **Webhooks**: https://blackroad-webhooks.amundsonalexa.workers.dev
-- **Email**: https://blackroad-email.amundsonalexa.workers.dev
-
-## License
-
-MIT - BlackRoad OS, Inc.
